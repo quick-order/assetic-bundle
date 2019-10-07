@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\AsseticBundle\Factory\Resource;
 
 use Assetic\Factory\Resource\ResourceInterface;
+use Codeception\Util\Template;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\Templating\Loader\LoaderInterface;
 
@@ -55,6 +56,16 @@ class FileResource implements ResourceInterface
         $fileResource = $this->loader->load($templateReference);
 
         if (!$fileResource) {
+            //Try custom ClearFacts findings
+            $parameters = $templateReference->getParameters();
+
+            if($parameters['bundle']) {
+                return file_get_contents('/var/www/templates/bundles/' . $parameters['bundle'] . '/' . $parameters['controller'] . '/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
+            }
+            else {
+                return file_get_contents('/var/www/templates/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
+            }
+
             throw new \InvalidArgumentException(sprintf('Unable to find template "%s".', $templateReference));
         }
 
@@ -83,6 +94,13 @@ class FileResource implements ResourceInterface
         $format = array_pop($elements);
         $name = implode('.', $elements);
 
-        return new TemplateReference($bundle, implode('/', $parts), $name, $format, $engine);
+        return new ClearFactsReference($bundle, implode('/', $parts), $name, $format, $engine);
+    }
+}
+
+class ClearFactsReference extends  TemplateReference {
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }
