@@ -55,17 +55,15 @@ class FileResource implements ResourceInterface
         $templateReference = $this->getTemplate();
         $fileResource = $this->loader->load($templateReference);
 
+        $parameters = $templateReference->getParameters();
+        //If there are files in the template directory at top level that are overwrites, use these ones
+        if($parameters['bundle'] && is_file('/var/www/templates/bundles/' . $parameters['bundle'] . '/' . $parameters['controller'] . '/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]))) {
+            return file_get_contents('/var/www/templates/bundles/' . $parameters['bundle'] . '/' . $parameters['controller'] . '/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
+        } elseif(is_file('/var/www/templates/ClearFacts/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]))) {
+            return file_get_contents('/var/www/templates/ClearFacts/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
+        }
+        //Nothing found, throw exception
         if (!$fileResource) {
-            //Try custom ClearFacts findings
-            $parameters = $templateReference->getParameters();
-
-            if($parameters['bundle']) {
-                return file_get_contents('/var/www/templates/bundles/' . $parameters['bundle'] . '/' . $parameters['controller'] . '/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
-            }
-            else {
-                return file_get_contents('/var/www/templates/' . implode('.', [$parameters['name'], $parameters ['format'], $parameters['engine']]));
-            }
-
             throw new \InvalidArgumentException(sprintf('Unable to find template "%s".', $templateReference));
         }
 
