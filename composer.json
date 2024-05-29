@@ -24,7 +24,7 @@
         "symfony/dependency-injection": "~2.3|~3.0|~4.0|~5.0",
         "symfony/console": "~2.3|~3.0|~4.0|~5.0",
         "symfony/yaml": "~2.3|~3.0|~4.0|~5.0",
-        "kriswallsmith/assetic": "~1.4"
+        "kriswallsmith/assetic": "dev-master#3bc23d50acc9c842180ef78ef62129184f500d6c"
     },
     "require-dev": {
         "patchwork/jsqueeze": "~1.0",
