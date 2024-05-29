@@ -12,6 +12,12 @@
             "homepage": "http://kriswallsmith.net/"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/quick-order/assetic"
+        }
+    ],
     "require": {
         "php": "^5.3||^7.0||^8.0",
         "symfony/framework-bundle": "~2.3|~3.0|~4.0|~5.0",
